@@ -71,6 +71,45 @@ interface Database {
   pollVotes: PollVote[];
 }
 
+const DEFAULT_PETITIONS: Petition[] = [
+  {
+    id: 'pet_save_anojan_01',
+    title: 'Save Anojan: Appeal for Presidential Pardon & Royal Clemency from Saudi Arabia',
+    slug: 'save-anojan',
+    description: `This international public petition campaign is launched to secure a humanitarian Royal Clemency and Presidential Pardon for Anojan, a young Sri Lankan citizen currently facing a death sentence in the Kingdom of Saudi Arabia.\n\nAnojan, hailing from a vulnerable background in Jaffna, Sri Lanka, migrated to Saudi Arabia as a domestic laborer to support his impoverished family. Due to a series of tragic, highly unintended, and unfortunate circumstances, he was convicted and sentenced.\n\nHis grieving family, along with the entire citizenry of Sri Lanka and global humanitarians, make a solemn, peaceful appeal of mercy to His Majesty King Salman bin Abdulaziz Al Saud, the Royal Court, and the Saudi judicial authorities to grant royal mercy and commute his sentence.\n\n**Our Clear Objectives:**\n1. We appeal to the exceptional mercy of His Majesty the King of Saudi Arabia to grant Anojan a Royal Clemency on compassionate grounds.\n2. We urge the President and Ministry of Foreign Affairs of Sri Lanka to immediately accelerate top-level bilateral diplomatic mediation with the Saudi Government to save Anojans life.\n\nEvery single signature adds a beacon of hope and strength. Please sign and share this humanitarian appeal to help return Anojan safely to his elderly parents.`,
+    targetCount: 1000000,
+    currentCount: 312411,
+    creatorId: 'admin-user-id',
+    createdAt: new Date().toISOString(),
+    status: 'active',
+    imageUrl: ''
+  },
+  {
+    id: 'pet_hikkaduwa_02',
+    title: "Protect Sri Lanka's Coral Reefs in Hikkaduwa from Commercial Boating",
+    slug: 'protect-hikkaduwa-coral-reefs',
+    description: `Hikkaduwa Marine Sanctuary is facing critical degradation due to plastic pollution, illegal anchoring, and rising sea temperatures. This petition urges the Department of Wildlife Conservation (DWC) to declare the area a strict marine reserve and restrict commercial motorized boating inside the shallow lagoon.\n\nOur coral reefs are an irreplaceable natural treasure and key to Sri Lanka's marine tourism. We must protect them before they are completely bleached and destroyed.`,
+    targetCount: 50000,
+    currentCount: 18450,
+    creatorId: 'admin-user-id',
+    createdAt: new Date().toISOString(),
+    status: 'active',
+    imageUrl: ''
+  },
+  {
+    id: 'pet_colombo_03',
+    title: 'Introduce Safer CCTV-Monitored Public Transport Options for Women in Colombo',
+    slug: 'safe-transport-colombo',
+    description: `Over 80% of women using public buses and trains in Colombo report facing verbal or physical harassment during transit. We appeal to the Ministry of Transport and Highways to introduce dedicated CCTV-monitored compartments, trained transit marshals, and a direct emergency reporting hotline.\n\nSafe transit is a fundamental right of every citizen. Let us build a safer Colombo for our mothers, sisters, and daughters.`,
+    targetCount: 75000,
+    currentCount: 42100,
+    creatorId: 'admin-user-id',
+    createdAt: new Date().toISOString(),
+    status: 'active',
+    imageUrl: ''
+  }
+];
+
 // --- Seeding Default DB ---
 function seedDefaultDb(): Database {
   const adminId = 'admin-user-id';
@@ -85,7 +124,7 @@ function seedDefaultDb(): Database {
         createdAt: new Date().toISOString()
       }
     ],
-    petitions: [],
+    petitions: DEFAULT_PETITIONS,
     signatures: [],
     polls: [],
     pollVotes: []
@@ -159,8 +198,17 @@ function readDb(): Database {
       const data = fs.readFileSync(DB_FILE, 'utf-8');
       const parsed = JSON.parse(data);
       if (!parsed.users) parsed.users = [];
+      if (!parsed.petitions) parsed.petitions = [];
+      if (!parsed.signatures) parsed.signatures = [];
       if (!parsed.polls) parsed.polls = [];
       if (!parsed.pollVotes) parsed.pollVotes = [];
+
+      // Ensure default petitions exist
+      for (const defPet of DEFAULT_PETITIONS) {
+        if (!parsed.petitions.some((p: any) => p.slug === defPet.slug || p.id === defPet.id)) {
+          parsed.petitions.push(defPet);
+        }
+      }
 
       // Ensure admin exists
       const hasAdmin = parsed.users.some((u: any) => (u.phone === '+94771234567' || u.phone === '0771234567') && u.role === 'admin');
@@ -173,9 +221,6 @@ function readDb(): Database {
           role: 'admin',
           createdAt: new Date().toISOString()
         });
-        try {
-          fs.writeFileSync(DB_FILE, JSON.stringify(parsed, null, 2), 'utf-8');
-        } catch (e) {}
       }
 
       return parsed;
