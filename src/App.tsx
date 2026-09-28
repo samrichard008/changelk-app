@@ -859,8 +859,8 @@ export default function App() {
         if (result.accountCreated) {
           setSuccessToast({
             show: true,
-            message: t('signedSuccessfully'),
-            autoPass: result.tempPassword
+            message: `${t('signedSuccessfully')} Account created! Phone: ${phone}, Password: ${result.generatedPassword}`,
+            autoPass: result.generatedPassword
           });
           
           // Auto log in the user with secure token
@@ -1903,9 +1903,9 @@ export default function App() {
                         selectedPetition.signatures.slice(0, 3).map((sig) => (
                           <div key={sig.id} className="flex items-start gap-4 p-4 bg-white border border-stone-200 rounded-xl shadow-2xs">
                             <img 
-                              src={sig.signatureImageUrl} 
-                              alt="Signature" 
-                              className="w-12 h-12 rounded-lg border border-stone-100 object-contain bg-stone-50"
+                              src={`https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(sig.fullName)}`}
+                              alt={sig.fullName} 
+                              className="w-12 h-12 rounded-lg border border-stone-100 object-cover bg-stone-50"
                               referrerPolicy="no-referrer"
                             />
                             <div className="flex-1 min-w-0">
