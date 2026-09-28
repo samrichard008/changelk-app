@@ -311,6 +311,15 @@ app.use((req, res, next) => {
 
 const router = express.Router();
 
+router.use(async (req, res, next) => {
+  try {
+    await syncDbFromBunny();
+  } catch (err) {
+    console.warn('Request sync from Bunny failed:', err);
+  }
+  next();
+});
+
 // Get all petitions
 router.get('/petitions', (req, res) => {
   try {

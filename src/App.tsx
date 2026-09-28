@@ -26,6 +26,7 @@ interface Petition {
   creatorId: string;
   createdAt: string;
   status: 'active' | 'closed';
+  imageUrl?: string;
   signatures?: Signature[];
 }
 
