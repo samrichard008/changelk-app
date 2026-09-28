@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+  
+  --color-brand-primary: #9A3412; /* Terracotta curatorial accent */
+  --color-brand-accent: #78350F;  /* Bronze */
+  --color-brand-canvas: #FAF9F6;  /* Archival Warm Paper */
+  --color-brand-surface: #F5F2EB; /* Soft limestone */
+}
+
+/* Custom styles for high quality editorial signatures and design elements */
+body {
+  font-family: var(--font-sans);
+}
+
+h1, h2, h3, h4, .font-serif-editorial {
+  font-family: var(--font-serif);
+}

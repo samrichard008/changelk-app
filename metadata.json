@@ -1,0 +1,6 @@
+{
+  "name": "Changelk",
+  "description": "Sri Lanka's Sovereign Petition and Public Advocacy Platform",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
