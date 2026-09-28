@@ -186,10 +186,10 @@ function readDb(): Database {
   return seedDefaultDb();
 }
 
-function writeDb(data: Database): void {
+async function writeDb(data: Database): Promise<void> {
   try {
     fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf-8');
-    uploadDbToBunny(data).catch(() => {});
+    await uploadDbToBunny(data);
   } catch (err) {
     console.error('Error writing database:', err);
   }
@@ -352,7 +352,7 @@ router.post('/petitions/:id/sign', async (req, res) => {
 
     db.signatures.push(newSignature);
     petition.currentCount += 1;
-    writeDb(db);
+    await writeDb(db);
 
     res.status(201).json({
       success: true,
@@ -405,7 +405,7 @@ router.post('/petitions', async (req, res) => {
     };
 
     db.petitions.push(newPetition);
-    writeDb(db);
+    await writeDb(db);
     res.status(201).json({ success: true, petition: newPetition });
   } catch {
     res.status(500).json({ error: 'Failed to create petition' });
@@ -434,7 +434,7 @@ router.put('/petitions/:id', async (req, res) => {
       petition.imageUrl = await uploadToBunny(imageBase64, `petition_edit_${Date.now()}.png`);
     }
 
-    writeDb(db);
+    await writeDb(db);
     res.json({ success: true, petition });
   } catch {
     res.status(500).json({ error: 'Failed to update petition' });
@@ -442,7 +442,7 @@ router.put('/petitions/:id', async (req, res) => {
 });
 
 // Delete petition (Admin only)
-router.delete('/petitions/:id', (req, res) => {
+router.delete('/petitions/:id', async (req, res) => {
   const { id } = req.params;
   const creatorId = (req.body && req.body.creatorId) || req.query.creatorId as string;
 
@@ -454,7 +454,7 @@ router.delete('/petitions/:id', (req, res) => {
 
     db.petitions = db.petitions.filter(p => p.id !== id);
     db.signatures = db.signatures.filter(s => s.petitionId !== id);
-    writeDb(db);
+    await writeDb(db);
     res.json({ success: true, message: 'Petition deleted successfully' });
   } catch {
     res.status(500).json({ error: 'Failed to delete petition' });
@@ -572,7 +572,7 @@ router.post('/polls/:id/vote', async (req, res) => {
     };
 
     db.pollVotes.push(newVote);
-    writeDb(db);
+    await writeDb(db);
 
     res.status(201).json({
       success: true,
@@ -593,7 +593,7 @@ router.post('/polls/:id/vote', async (req, res) => {
 });
 
 // Create poll (Admin only)
-router.post('/polls', (req, res) => {
+router.post('/polls', async (req, res) => {
   const { title, description, creatorId } = req.body;
   if (!title || !description || !creatorId) {
     return res.status(400).json({ error: 'Missing required poll details' });
@@ -616,7 +616,7 @@ router.post('/polls', (req, res) => {
     };
 
     db.polls.push(newPoll);
-    writeDb(db);
+    await writeDb(db);
     res.status(201).json({ success: true, poll: newPoll });
   } catch {
     res.status(500).json({ error: 'Failed to create poll' });
@@ -624,7 +624,7 @@ router.post('/polls', (req, res) => {
 });
 
 // Edit poll (Admin only)
-router.put('/polls/:id', (req, res) => {
+router.put('/polls/:id', async (req, res) => {
   const { id } = req.params;
   const { title, description, creatorId, imageUrl } = req.body;
 
@@ -641,7 +641,7 @@ router.put('/polls/:id', (req, res) => {
     if (description) poll.description = description;
     if (imageUrl !== undefined) poll.imageUrl = imageUrl;
 
-    writeDb(db);
+    await writeDb(db);
     res.json({ success: true, poll });
   } catch {
     res.status(500).json({ error: 'Failed to update poll' });
@@ -649,7 +649,7 @@ router.put('/polls/:id', (req, res) => {
 });
 
 // Delete poll (Admin only)
-router.delete('/polls/:id', (req, res) => {
+router.delete('/polls/:id', async (req, res) => {
   const { id } = req.params;
   const creatorId = (req.body && req.body.creatorId) || req.query.creatorId as string;
 
@@ -661,7 +661,7 @@ router.delete('/polls/:id', (req, res) => {
 
     db.polls = db.polls.filter(p => p.id !== id);
     db.pollVotes = db.pollVotes.filter(v => v.pollId !== id);
-    writeDb(db);
+    await writeDb(db);
     res.json({ success: true, message: 'Poll deleted successfully' });
   } catch {
     res.status(500).json({ error: 'Failed to delete poll' });
