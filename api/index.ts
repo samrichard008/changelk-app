@@ -309,9 +309,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Non-blocking background sync from Bunny
-syncDbFromBunny().catch(() => {});
-
 const router = express.Router();
 
 // Get all petitions
