@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --font-serif: "Cormorant Garamond", Georgia, serif;
-  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-serif: "Cormorant Garamond", "Abhaya Libre", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", "Noto Sans Sinhala", "Noto Sans Tamil", system-ui, sans-serif;
   
   --color-brand-primary: #9A3412; /* Terracotta curatorial accent */
   --color-brand-accent: #78350F;  /* Bronze */

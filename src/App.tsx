@@ -669,6 +669,11 @@ export default function App() {
     return TRANSLATIONS[currentLanguage][key] || TRANSLATIONS['en'][key] || key;
   };
 
+  // Helper method to retrieve English-only text for navigation elements
+  const tNav = (key: string): string => {
+    return TRANSLATIONS['en'][key] || key;
+  };
+
   // Helper method to get localized petition content
   const getPetitionContent = (slug: string, fallbackTitle: string, fallbackDesc: string) => {
     const loc = PETITION_CONTENT[currentLanguage]?.[slug];
@@ -1282,10 +1287,10 @@ export default function App() {
               onClick={() => { setSelectedPetitionSlug('save-anojan'); setActiveTab('home'); }}
               className="text-2xl font-serif font-bold tracking-tight text-stone-900 cursor-pointer"
             >
-              {t('platformTitle')}
+              {tNav('platformTitle')}
             </span>
             <span className="hidden lg:inline-block text-xs font-serif italic text-stone-400 border-l border-stone-200 pl-3">
-              {t('platformSubtitle')}
+              {tNav('platformSubtitle')}
             </span>
           </div>
 
@@ -1295,32 +1300,32 @@ export default function App() {
               onClick={() => { setSelectedPetitionSlug('save-anojan'); setActiveTab('home'); }} 
               className={`hover:text-stone-950 transition-colors ${activeTab === 'home' && selectedPetitionSlug === 'save-anojan' ? 'text-stone-950 underline decoration-[#9A3412] underline-offset-4' : ''}`}
             >
-              {t('flagshipTab')}
+              {tNav('flagshipTab')}
             </button>
             <button 
               onClick={() => setActiveTab('explore')} 
               className={`hover:text-stone-950 transition-colors ${activeTab === 'explore' ? 'text-stone-950 underline decoration-[#9A3412] underline-offset-4' : ''}`}
             >
-              {t('exploreTab')}
+              {tNav('exploreTab')}
             </button>
             <button 
               onClick={() => setActiveTab('polls')} 
               className={`hover:text-stone-950 transition-colors ${activeTab === 'polls' ? 'text-stone-950 underline decoration-[#9A3412] underline-offset-4' : ''}`}
             >
-              {t('pollsTab')}
+              {tNav('pollsTab')}
             </button>
             <button 
               onClick={() => setActiveTab('ledger')} 
               className={`hover:text-stone-950 transition-colors ${activeTab === 'ledger' ? 'text-stone-950 underline decoration-[#9A3412] underline-offset-4' : ''}`}
             >
-              {t('ledgerTab')}
+              {tNav('ledgerTab')}
             </button>
             {session?.role === 'admin' && (
               <button 
                 onClick={() => setActiveTab('start')} 
                 className={`hover:text-stone-950 transition-colors ${activeTab === 'start' ? 'text-stone-950 underline decoration-[#9A3412] underline-offset-4' : ''}`}
               >
-                {t('startTab')}
+                {tNav('startTab')}
               </button>
             )}
           </nav>
@@ -1371,7 +1376,7 @@ export default function App() {
                     onClick={handleLogout} 
                     className="text-xs text-stone-400 hover:text-stone-700 transition-colors font-medium px-1"
                   >
-                    {t('logout')}
+                    {tNav('logout')}
                   </button>
                 </div>
               ) : (
@@ -1379,7 +1384,7 @@ export default function App() {
                   onClick={() => setActiveTab('login')} 
                   className="text-xs font-semibold text-white bg-[#9A3412] hover:bg-[#78350F] px-3.5 py-1.5 rounded-lg transition-colors shadow-2xs"
                 >
-                  {t('signIn')}
+                  {tNav('signIn')}
                 </button>
               )}
             </div>
@@ -1402,19 +1407,19 @@ export default function App() {
               onClick={() => { setSelectedPetitionSlug('save-anojan'); setActiveTab('home'); setMobileMenuOpen(false); }} 
               className="text-left py-2 text-stone-700 hover:text-stone-950 font-medium border-b border-stone-100"
             >
-              {t('flagshipTab')}
+              {tNav('flagshipTab')}
             </button>
             <button 
               onClick={() => { setActiveTab('explore'); setMobileMenuOpen(false); }} 
               className="text-left py-2 text-stone-700 hover:text-stone-950 font-medium border-b border-stone-100"
             >
-              {t('exploreTab')}
+              {tNav('exploreTab')}
             </button>
             <button 
               onClick={() => { setActiveTab('ledger'); setMobileMenuOpen(false); }} 
               className="text-left py-2 text-stone-700 hover:text-stone-950 font-medium border-b border-stone-100"
             >
-              {t('ledgerTab')}
+              {tNav('ledgerTab')}
             </button>
             {session?.role === 'admin' && (
               <button 
@@ -1424,7 +1429,7 @@ export default function App() {
                 }} 
                 className="text-left py-2 text-stone-700 hover:text-stone-950 font-medium border-b border-stone-100"
               >
-                {t('startTab')}
+                {tNav('startTab')}
               </button>
             )}
             
@@ -1437,13 +1442,13 @@ export default function App() {
                       onClick={() => { setActiveTab('dashboard'); setMobileMenuOpen(false); }}
                       className="flex-1 text-center py-2 text-xs font-semibold text-stone-700 bg-stone-100 border border-stone-200 rounded-lg"
                     >
-                      {t('dashboard')}
+                      {tNav('dashboard')}
                     </button>
                     <button 
                       onClick={() => { handleLogout(); setMobileMenuOpen(false); }}
                       className="flex-1 text-center py-2 text-xs text-stone-500 bg-stone-100 rounded-lg"
                     >
-                      {t('logout')}
+                      {tNav('logout')}
                     </button>
                   </div>
                 </div>
@@ -1452,7 +1457,7 @@ export default function App() {
                   onClick={() => { setActiveTab('login'); setMobileMenuOpen(false); }} 
                   className="w-full text-center py-2.5 text-xs font-semibold text-white bg-[#9A3412] hover:bg-[#78350F] rounded-lg"
                 >
-                  {t('signIn')}
+                  {tNav('signIn')}
                 </button>
               )}
             </div>
@@ -3056,16 +3061,15 @@ export default function App() {
                       <label className="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-1">
                         {t('formTarget')}
                       </label>
-                      <select 
+                      <input 
+                        type="number"
+                        required
+                        min="1"
+                        placeholder="e.g. 100000"
                         value={newTargetCount}
                         onChange={(e) => setNewTargetCount(e.target.value)}
-                        className="w-full text-sm bg-[#FAF9F6] border border-stone-300 rounded-lg px-3.5 py-2 focus:outline-hidden focus:border-[#9A3412] text-stone-900 font-medium"
-                      >
-                        <option value="5000">5,000</option>
-                        <option value="10000">10,000</option>
-                        <option value="50000">50,000</option>
-                        <option value="100000">100,000</option>
-                      </select>
+                        className="w-full text-sm bg-[#FAF9F6] border border-stone-300 rounded-lg px-3.5 py-2.5 focus:outline-hidden focus:border-[#9A3412] text-stone-900 placeholder-stone-400 font-medium"
+                      />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -3433,7 +3437,7 @@ export default function App() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 border-b border-stone-900 pb-8 mb-8">
             
             <div>
-              <span className="text-xl font-serif font-bold text-white tracking-tight">{t('platformTitle')}</span>
+              <span className="text-xl font-serif font-bold text-white tracking-tight">{tNav('platformTitle')}</span>
               <p className="text-xs text-stone-500 mt-2 leading-relaxed">
                 {t('footerDesc')}
               </p>
@@ -3442,11 +3446,11 @@ export default function App() {
             <div>
               <h4 className="text-xs font-bold text-stone-300 uppercase tracking-widest mb-3">Links</h4>
               <ul className="space-y-2 text-xs">
-                <li><button onClick={() => { setSelectedPetitionSlug('save-anojan'); setActiveTab('home'); }} className="hover:text-white transition-colors">{t('flagshipTab')}</button></li>
-                <li><button onClick={() => { setActiveTab('explore'); }} className="hover:text-white transition-colors">{t('exploreTab')}</button></li>
-                <li><button onClick={() => { setActiveTab('ledger'); }} className="hover:text-white transition-colors">{t('ledgerTab')}</button></li>
+                <li><button onClick={() => { setSelectedPetitionSlug('save-anojan'); setActiveTab('home'); }} className="hover:text-white transition-colors">{tNav('flagshipTab')}</button></li>
+                <li><button onClick={() => { setActiveTab('explore'); }} className="hover:text-white transition-colors">{tNav('exploreTab')}</button></li>
+                <li><button onClick={() => { setActiveTab('ledger'); }} className="hover:text-white transition-colors">{tNav('ledgerTab')}</button></li>
                 {session?.role === 'admin' && (
-                  <li><button onClick={() => { setActiveTab('start'); }} className="hover:text-white transition-colors">{t('startTab')}</button></li>
+                  <li><button onClick={() => { setActiveTab('start'); }} className="hover:text-white transition-colors">{tNav('startTab')}</button></li>
                 )}
               </ul>
             </div>
