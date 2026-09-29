@@ -6,6 +6,7 @@ import crypto from 'crypto';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DB_FILE = process.env.VERCEL ? path.resolve('/tmp', 'db.json') : path.resolve(process.cwd(), 'db.json');
+let lastSyncTime = 0;
 
 // --- Database Interfaces ---
 interface User {
@@ -143,6 +144,11 @@ async function syncDbFromBunny(): Promise<void> {
   const ENDPOINT = 'sg.storage.bunnycdn.com';
   const DB_FILENAME = 'db.json';
 
+  // If local db exists and was updated or synced in the last 30 seconds, do not overwrite it!
+  if (fs.existsSync(DB_FILE) && (Date.now() - lastSyncTime < 30000)) {
+    return;
+  }
+
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 4000); // 4s timeout protection
@@ -160,6 +166,7 @@ async function syncDbFromBunny(): Promise<void> {
     if (response.ok) {
       const data = await response.text();
       fs.writeFileSync(DB_FILE, data, 'utf-8');
+      lastSyncTime = Date.now();
       console.log('Database synchronized successfully from Bunny.net storage!');
     }
   } catch (error) {
@@ -234,6 +241,7 @@ function readDb(): Database {
 async function writeDb(data: Database): Promise<void> {
   try {
     fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf-8');
+    lastSyncTime = Date.now();
     await uploadDbToBunny(data);
   } catch (err) {
     console.error('Error writing database:', err);
