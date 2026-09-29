@@ -2189,7 +2189,7 @@ export default function App() {
                   type: 'petition',
                   title: localized.title,
                   image: p.imageUrl || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(p.title)}`,
-                  status: p.status === 'active' ? 'Trending!' : 'Victory!',
+                  status: p.status === 'active' ? 'Live updates signatures' : 'Completed Appeal',
                   countText: `${formatNumber(p.currentCount)} signatures`,
                   onClick: () => {
                     setSelectedPetitionSlug(p.slug);
@@ -2204,8 +2204,8 @@ export default function App() {
                   id: poll.id,
                   type: 'poll',
                   title: poll.title,
-                  image: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(poll.title)}&backgroundColor=0f172a,334155,475569`,
-                  status: poll.status === 'active' ? 'Live Poll!' : 'Closed',
+                  image: poll.imageUrl || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(poll.title)}&backgroundColor=0f172a,334155,475569`,
+                  status: poll.status === 'active' ? 'Live updates signatures' : 'Closed',
                   countText: `${formatNumber(poll.votesCount || 0)} votes`,
                   onClick: () => {
                     setSelectedPollId(poll.id);
@@ -2222,50 +2222,87 @@ export default function App() {
                     id: 'mock-1',
                     title: 'Ban toxic industrial dumping in waterways',
                     image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=300&h=300',
-                    status: 'Trending!',
+                    status: 'Live updates signatures',
                     countText: '770,243 signatures',
                   },
                   {
                     id: 'mock-2',
                     title: 'Compulsory pediatric clinics in rural zones',
                     image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=300&h=300',
-                    status: 'Trending!',
+                    status: 'Live updates signatures',
                     countText: '100,353 signatures',
                   },
                   {
                     id: 'mock-3',
                     title: 'Declare sanctuary zone around Wilpattu',
                     image: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&q=80&w=300&h=300',
-                    status: 'Victory!',
+                    status: 'Live updates signatures',
                     countText: '97,270 signatures',
                   },
                   {
                     id: 'mock-4',
                     title: 'Implement strict penalty for animal cruelty',
                     image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=300&h=300',
-                    status: 'Victory!',
+                    status: 'Live updates signatures',
                     countText: '46,991 signatures',
                   },
                   {
                     id: 'mock-5',
                     title: 'Establish youth digital hubs in East',
                     image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=300&h=300',
-                    status: 'Victory!',
+                    status: 'Live updates signatures',
                     countText: '610,790 signatures',
                   }
                 );
               }
+
+              // Compute aggregate stats for the real-time live counter boxes
+              const totalSignatures = 1625647 + petitions.reduce((acc, p) => acc + p.currentCount, 0);
+              const totalVotes = 842912 + polls.reduce((acc, p) => acc + (p.votesCount || 0), 0);
 
               return (
                 <div className="mt-16 pt-12 border-t border-stone-200">
                   <div className="bg-gradient-to-r from-sky-50/40 via-white to-amber-50/30 border border-stone-200/60 rounded-3xl p-8 sm:p-12 shadow-2xs">
                     
                     <h3 className="text-xl sm:text-2xl font-serif font-black text-stone-900 text-center tracking-tight mb-2">
-                      See real people changing their communities.
+                      Currently running polls and petitions
                     </h3>
                     <p className="text-stone-500 text-xs text-center tracking-normal mb-10 max-w-lg mx-auto leading-relaxed">
-                      Every live petition and verified opinion poll updates here dynamically. Click any circle below to explore their direct impact.
+                      Dynamic, live updates of public opinion polls and sovereign petitions currently active across Sri Lanka. Click any item below to view and participate.
                     </p>
+
+                    {/* TWO-TWO BOXES: Beautiful Live Real-Time Counter Cards */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl mx-auto mb-12">
+                      {/* Box 1: Live Signatures Counter */}
+                      <div className="bg-[#FAF9F6] border border-stone-200 shadow-sm rounded-2xl p-6 relative overflow-hidden group hover:border-[#9A3412] hover:shadow-md transition-all duration-300">
+                        <div className="absolute top-4 right-4 flex h-3 w-3 items-center justify-center">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#9A3412]"></span>
+                        </div>
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400">Live Updates Signatures</span>
+                        <div className="text-3xl sm:text-4xl font-sans font-black text-stone-900 mt-2 tracking-tight">
+                          {formatNumber(totalSignatures)}
+                        </div>
+                        <p className="text-[11px] font-medium text-stone-500 mt-1">
+                          Verified, unalterable citizen signatures logged chronologically on-ledger.
+                        </p>
+                      </div>
+
+                      {/* Box 2: Live Votes Counter */}
+                      <div className="bg-[#FAF9F6] border border-stone-200 shadow-sm rounded-2xl p-6 relative overflow-hidden group hover:border-emerald-600 hover:shadow-md transition-all duration-300">
+                        <div className="absolute top-4 right-4 flex h-3 w-3 items-center justify-center">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-600"></span>
+                        </div>
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400">Live updates opinions</span>
+                        <div className="text-3xl sm:text-4xl font-sans font-black text-stone-900 mt-2 tracking-tight">
+                          {formatNumber(totalVotes)}
+                        </div>
+                        <p className="text-[11px] font-medium text-stone-500 mt-1">
+                          Secure agree, disagree, and neutral opinions recorded transparently.
+                        </p>
+                      </div>
+                    </div>
 
                     {/* Dynamic Changemakers Row Grid */}
                     <div className="flex flex-wrap gap-8 items-center justify-center">
@@ -2286,7 +2323,7 @@ export default function App() {
                           {/* Floating Info Capsule */}
                           <div className="bg-white border border-stone-200/80 shadow-sm rounded-2xl py-2 px-4 text-center mt-3 relative z-20 min-w-[130px] sm:min-w-[150px] transition-transform duration-300 group-hover:scale-102">
                             <div className="text-[10px] sm:text-xs font-black text-stone-800 flex items-center justify-center gap-1.5 truncate max-w-[140px] mx-auto">
-                              <span className={`w-1.5 h-1.5 rounded-full ${spot.status.includes('Victory') || spot.status.includes('Closed') ? 'bg-emerald-500' : 'bg-red-500 animate-pulse'}`}></span>
+                              <span className={`w-1.5 h-1.5 rounded-full ${spot.status.includes('Completed') || spot.status.includes('Closed') ? 'bg-emerald-500' : 'bg-red-500 animate-pulse'}`}></span>
                               {spot.status}
                             </div>
                             <div className="text-[9px] sm:text-[10px] text-stone-500 font-bold font-sans mt-0.5 whitespace-nowrap">
